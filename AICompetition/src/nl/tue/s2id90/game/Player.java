@@ -17,17 +17,17 @@ public interface Player<Move,State extends GameState<Move>>  extends Identity
      * @see stop()
      **/
     Move getMove(State s);
-    
+
     /** @return the computed value of the last Move. Returns null if that value
-      * is not available.
+     * is not available.
      **/
     Integer getValue();
-    
+
     /** as a result of this call the Player should as soon as possible
      * return a value in getMove().
      */
     void stop();
-    
+
     /** @return whether or not this is a human player **/
     boolean isHuman();
 }

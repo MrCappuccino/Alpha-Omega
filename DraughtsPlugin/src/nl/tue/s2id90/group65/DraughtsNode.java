@@ -14,18 +14,19 @@ import org10x10.dam.game.Move;
 public class DraughtsNode {
     private final DraughtsState state;
     private Move move;
+
     public DraughtsNode(DraughtsState s) {
         this.state = s;
     }
-    
+
     public DraughtsState getState() {
         return state;
     }
-    
+
     public void setBestMove(Move m) {
         this.move = m;
     }
-    
+
     public Move getBestMove() {
         return move;
     }

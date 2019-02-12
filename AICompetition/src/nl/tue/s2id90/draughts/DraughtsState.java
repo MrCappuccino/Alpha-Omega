@@ -43,7 +43,7 @@ public class DraughtsState implements GameState<Move> {
      * end immediately behind the last captured piece.
      */
     final boolean useKillerRules;
-    
+
     /**
      * Represents an empty field on a board.
      */
@@ -73,11 +73,11 @@ public class DraughtsState implements GameState<Move> {
      * Represents a white (non-playing) field on a board.
      **/
     final public static int WHITEFIELD = 5;
-    
+
     private final BoardState bs;
     private final MoveGenerator moveGenerator;
     private List<Move> moves=null;
-    
+
     /**
      * creates an initial  draughts state for a game using killer rules
      */
@@ -85,19 +85,19 @@ public class DraughtsState implements GameState<Move> {
         this(new BoardState(10,10),true);
         bs.setBegin();
     }
-    
+
     private DraughtsState(DraughtsState ds) {
         this(ds.bs, ds.useKillerRules);
     }
-    
+
     /** creates a draughts state with a copy of the given BoardState. **/
     DraughtsState(BoardState bs, boolean useKillerRules) {
         this.bs = (BoardState) bs.clone();
         this.useKillerRules = useKillerRules;
         moveGenerator = MyMoveGeneratorFactory.create(bs, useKillerRules);
     }  
-    
-    
+
+
     /**
      *
      * @return
@@ -139,7 +139,7 @@ public class DraughtsState implements GameState<Move> {
         moves=null;             // invalidate cached moves
         bs.moveBackward(m);
     }
-    
+
     /**
      *
      * @return
@@ -148,7 +148,7 @@ public class DraughtsState implements GameState<Move> {
     public String toString() {
         return bs.toString()+"      w2m = "+ isWhiteToMove();
     }
-    
+
     /** returns an array a of length 51: 
      * a[0] is unused; a[i] is one of {WHITE,BLACK,WHITE_KING,BLACK_KING,EMPTY}.
      * Note that you can directly change this array to change this DraughtsState;
@@ -160,7 +160,7 @@ public class DraughtsState implements GameState<Move> {
     public int[] getPieces() {
         return bs.getPieces();
     }
-    
+
     /** @return piece at field f 
      * @see DraughtsState#WHITEPIECE
      * @see DraughtsState#BLACKPIECE
@@ -172,7 +172,7 @@ public class DraughtsState implements GameState<Move> {
         if (f<1 || f > 50) throw new IllegalArgumentException();
         return bs.getPiece(f);
     }
-    
+
     /** @return one of {WHITE,BLACK,WHITE_PIECE,BLACK_PIECE,EMPTY}
      * @param r row    
      * @param c column

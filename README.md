@@ -17,6 +17,6 @@ ant -f /home/ongo/Documents/uni/2ID90/assignment1/AICompetition -Dnb.internal.ac
 
 ### All at once
 ```
-$ ant -f /home/ongo/NetBeansProjects/2ID90/assignment1/DraughtsPlugin -Dnb.internal.action.name=rebuild clean jar && ant -f /home/ongo/NetBeansProjects/2ID90/assignment1/AICompetition -Dnb.internal.action.name=rebuild clean jar && ant -f /home/ongo/NetBeansProjects/2ID90/assignment1/AICompetition -Dnb.internal.action.name=run run
+ant -f /home/ongo/Documents/uni/2ID90/assignment1/DraughtsPlugin -Dnb.internal.action.name=rebuild clean jar && ant -f /home/ongo/Documents/uni/2ID90/assignment1/AICompetition -Dnb.internal.action.name=rebuild clean jar && ant -f /home/ongo/Documents/uni/2ID90/assignment1/AICompetition -Dnb.internal.action.name=run run
 ```
 

@@ -41,7 +41,7 @@ public interface GameState<Move> {
      * resets state to initial game state.
      */
     void reset();  
-    
+
     /**
      * clones this state.
      * @return a clone of this state.
