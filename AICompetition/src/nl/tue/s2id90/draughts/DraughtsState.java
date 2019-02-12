@@ -76,7 +76,7 @@ public class DraughtsState implements GameState<Move> {
 
     private final BoardState bs;
     private final MoveGenerator moveGenerator;
-    private List<Move> moves=null;
+    private List<Move> moves = null;
 
     /**
      * creates an initial  draughts state for a game using killer rules
@@ -95,58 +95,37 @@ public class DraughtsState implements GameState<Move> {
         this.bs = (BoardState) bs.clone();
         this.useKillerRules = useKillerRules;
         moveGenerator = MyMoveGeneratorFactory.create(bs, useKillerRules);
-    }  
+    }
 
-
-    /**
-     *
-     * @return
-     */
     @Override
     public List<Move> getMoves() {
-        if (moves==null)
-            return moves=new ArrayList(moveGenerator.generateMoves(bs));
+        if (moves == null)
+            return moves = new ArrayList(moveGenerator.generateMoves(bs));
         return moves;
     }
 
-    /**
-     *
-     * @return
-     */
     @Override
     public boolean isEndState() {
-        if (moves==null)
+        if (moves == null)
             moves = new ArrayList(moveGenerator.generateMoves(bs));
         return moves.isEmpty();
     }
 
-    /**
-     *
-     * @param m
-     */
     @Override
     public void doMove(Move m) {
         moves = null;      // invalidate moves
         bs.moveForward(m);
     }
 
-    /**
-     *
-     * @param m
-     */
     @Override
     public void undoMove(Move m) {
-        moves=null;             // invalidate cached moves
+        moves = null;             // invalidate cached moves
         bs.moveBackward(m);
     }
 
-    /**
-     *
-     * @return
-     */
     @Override
     public String toString() {
-        return bs.toString()+"      w2m = "+ isWhiteToMove();
+        return bs.toString()+ "      w2m = " + isWhiteToMove();
     }
 
     /** returns an array a of length 51: 
@@ -161,7 +140,7 @@ public class DraughtsState implements GameState<Move> {
         return bs.getPieces();
     }
 
-    /** @return piece at field f 
+    /** @return piece at field f
      * @see DraughtsState#WHITEPIECE
      * @see DraughtsState#BLACKPIECE
      * @see DraughtsState#WHITEKING
@@ -174,30 +153,23 @@ public class DraughtsState implements GameState<Move> {
     }
 
     /** @return one of {WHITE,BLACK,WHITE_PIECE,BLACK_PIECE,EMPTY}
-     * @param r row    
+     * @param r row
      * @param c column
      **/
     public int getPiece(int r, int c) {
         int f = bs.rc2f(r, c);
-        if (f==-1) throw new IllegalArgumentException();
+        if (f == -1) throw new IllegalArgumentException();
         return bs.getPiece(f);
     }
 
-    /**
-     *
-     * @return
-     */
     @Override
     public boolean isWhiteToMove() {
         return bs.isWhiteToMove();
     }
 
-    /**
-     *
-     */
     @Override
     public void reset() {
-        moves=null;       // invalidate cached moves
+        moves = null;       // invalidate cached moves
         bs.setBegin();
     }
 
