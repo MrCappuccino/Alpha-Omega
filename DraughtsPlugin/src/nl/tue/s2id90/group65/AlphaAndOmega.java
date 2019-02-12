@@ -115,20 +115,26 @@ public class AlphaAndOmega  extends DraughtsPlayer{
      */
     int alphaBetaMin(DraughtsNode node, int alpha, int beta, int depth) throws AIStoppedException {
         if (stopped) {
-            stopped = false; throw new AIStoppedException();
+            stopped = false;
+            throw new AIStoppedException();
+        }
+
+        int value = 0;
+        if(depth == maxSearchDepth) {
+            return value;
         }
 
         DraughtsState state = node.getState();
         // ToDo: write an alphabeta search to compute bestMove and value
         Move bestMove = state.getMoves().get(0);
-        int value = 0;
         node.setBestMove(bestMove);
         return value;
     }
 
     int alphaBetaMax(DraughtsNode node, int alpha, int beta, int depth) throws AIStoppedException {
         if (stopped) {
-            stopped = false; throw new AIStoppedException();
+            stopped = false;
+            throw new AIStoppedException();
         }
         DraughtsState state = node.getState();
         // ToDo: write an alphabeta search to compute bestMove and value
