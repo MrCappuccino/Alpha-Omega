@@ -119,8 +119,8 @@ public class AlphaAndOmega  extends DraughtsPlayer {
         }
 
         // TODO: Get the best state out of all leaves
-        if (newState.isEndState()) {
-            return evaluation = evaluate(newState); // Return heuristic value of node
+        if (node.getState().isEndState()) {
+            return evaluate(node.getState()); // Return heuristic value of node
         }
         // TODO: evaluate the best move
         //node.setBestMove(move); // Best move is alpha
@@ -159,8 +159,8 @@ public class AlphaAndOmega  extends DraughtsPlayer {
             throw new AIStoppedException();
         }
         // TODO: Get the best state out of all leaves
-        if (newState.isEndState()) {
-            evaluation = evaluate(newState);
+        if (node.getState().isEndState()) {
+            evaluate(node.getState());
         }
         // TODO: evaluate the best move
         //node.setBestMove(move); // Best move is alpha
