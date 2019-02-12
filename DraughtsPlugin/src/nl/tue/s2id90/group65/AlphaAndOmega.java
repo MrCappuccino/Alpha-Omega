@@ -26,47 +26,49 @@ public class AlphaAndOmega  extends DraughtsPlayer{
         super("best.png"); // ToDo: replace with your own icon
         this.maxSearchDepth = maxSearchDepth;
     }
+    @Override
+    public Move getMove(DraughtsState s) {
+        Move bestMove = null;
+        bestValue = 0;
+        DraughtsNode node = new DraughtsNode(s);    // the root of the search tree
+        try {
+            // compute bestMove and bestValue in a call to alphabeta
+            bestValue = alphaBeta(node, MIN_VALUE, MAX_VALUE, maxSearchDepth);
 
-    @Override public Move getMove(DraughtsState s) {
-    Move bestMove = null;
-    bestValue = 0;
-    DraughtsNode node = new DraughtsNode(s);    // the root of the search tree
-    try {
-        // compute bestMove and bestValue in a call to alphabeta
-        bestValue = alphaBeta(node, MIN_VALUE, MAX_VALUE, maxSearchDepth);
+            // store the bestMove found uptill now
+            // NB this is not done in case of an AIStoppedException in alphaBeat()
+            bestMove  = node.getBestMove();
 
-        // store the bestMove found uptill now
-        // NB this is not done in case of an AIStoppedException in alphaBeat()
-        bestMove  = node.getBestMove();
+            // print the results for debugging reasons
+            System.err.format(
+                    "%s: depth= %2d, best move = %5s, value=%d\n", 
+                    this.getClass().getSimpleName(),maxSearchDepth, bestMove, bestValue
+                    );
+        } catch (AIStoppedException ex) {  /* nothing to do */  }
 
-        // print the results for debugging reasons
-        System.err.format(
-                "%s: depth= %2d, best move = %5s, value=%d\n", 
-                this.getClass().getSimpleName(),maxSearchDepth, bestMove, bestValue
-                );
-    } catch (AIStoppedException ex) {  /* nothing to do */  }
-
-    if (bestMove==null) {
-        System.err.println("no valid move found!");
-        return getRandomValidMove(s);
-    } else {
-        return bestMove;
+        if (bestMove==null) {
+            System.err.println("no valid move found!");
+            return getRandomValidMove(s);
+        } else {
+            return bestMove;
+        }
     }
-    } 
 
     /** This method's return value is displayed in the AICompetition GUI.
      * 
      * @return the value for the draughts state s as it is computed in a call to getMove(s). 
      */
-    @Override public Integer getValue() { 
-    return bestValue;
+    @Override
+    public Integer getValue() {
+        return bestValue;
     }
 
     /** Tries to make alphabeta search stop. Search should be implemented such that it
      * throws an AIStoppedException when boolean stopped is set to true;
      **/
-    @Override public void stop() {
-    stopped = true; 
+    @Override
+    public void stop() {
+        stopped = true;
     }
 
     /** returns random valid move in state s, or null if no moves exist. */

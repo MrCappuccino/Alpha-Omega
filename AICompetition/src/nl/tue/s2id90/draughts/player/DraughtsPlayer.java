@@ -61,17 +61,20 @@ public abstract class DraughtsPlayer implements Player<Move,DraughtsState> {
     /** empty stop method, should be overridden by a method that stops complicated 
      * computations.
      **/
-    @Override public void stop() {}
+    @Override
+    public void stop() {}
 
     /** generate name for player based on class name. **/
-    @Override public String getName() {
-    return getClass().getSimpleName();
+    @Override
+    public String getName() {
+        return getClass().getSimpleName();
     }
 
     /** returns whether or not the current player is a human player.
      * This implementation returns false.
      **/
-    @Override public boolean isHuman() {
-    return false;
+    @Override
+    public boolean isHuman() {
+        return false;
     }
 }
