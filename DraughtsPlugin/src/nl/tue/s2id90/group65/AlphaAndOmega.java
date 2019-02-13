@@ -97,7 +97,7 @@ public class AlphaAndOmega  extends DraughtsPlayer {
 
     /** Does an alphabeta computation with the given alpha and beta
      * where the player that is to move in node is the minimizing player.
-     * 
+     *
      * <p>Typical pieces of code used in this method are:
      *     <ul> <li><code>DraughtsState state = node.getState()</code>.</li>
      *          <li><code> state.doMove(move); .... ; state.undoMove(move);</code></li>
@@ -118,23 +118,15 @@ public class AlphaAndOmega  extends DraughtsPlayer {
             throw new AIStoppedException();
         }
 
-        // TODO: Get the best state out of all leaves
-        if (node.getState().isEndState()) {
-            return evaluate(node.getState()); // Return heuristic value of node
-        }
-        // TODO: evaluate the best move
-        //node.setBestMove(move); // Best move is alpha
-
         int minEval = MAX_VALUE; // +infinity
         // Return minEval if we reach max depth
-        if(depth >= maxSearchDepth) {
-            return minEval;
+        if(depth == 0) {
+            System.out.println("Hit max search depth");
+            return evaluate(node.getState());
         }
 
         DraughtsState state = node.getState();
         List<Move> moves = state.getMoves();
-
-        int evaluation = 0;
 
         for (Move move : moves) {
             DraughtsNode newNode = new DraughtsNode(state.clone());
@@ -142,14 +134,30 @@ public class AlphaAndOmega  extends DraughtsPlayer {
 
             newState.doMove(move);
 
+            // TODO: Get the best state out of all leaves
+            if (node.getState().isEndState()) {
+                System.out.println("Reached leaf node.");
+                int evaluation = evaluate(newNode.getState());
+
+                if(minEval >= evaluation) {
+                    minEval = evaluation;
+                    node.setBestMove(move);
+                }
+                return minEval;
+            }
+
             // For each move, see if the current minEval (+inf) is smaller than the max aBMax of it's child
             minEval = Math.min(minEval, alphaBetaMax(newNode, alpha, beta, depth - 1)); // Decrement depth
             beta = Math.min(beta, minEval);
+            System.out.println(depth + "current depth");
+
+            newState.undoMove(move);
 
             if (beta <= alpha) { // Prune
                 break;
             }
         }
+
         return minEval;
     }
 
@@ -158,38 +166,48 @@ public class AlphaAndOmega  extends DraughtsPlayer {
             stopped = false;
             throw new AIStoppedException();
         }
-        // TODO: Get the best state out of all leaves
-        if (node.getState().isEndState()) {
-            evaluate(node.getState());
-        }
-        // TODO: evaluate the best move
-        //node.setBestMove(move); // Best move is alpha
 
         int maxEval = MIN_VALUE; // +infinity
-        // Return maxEval if we reach max depth
-        if(depth >= maxSearchDepth) {
-            return maxEval;
-        }
 
         DraughtsState state = node.getState();
+        // Return maxEval if we reach max depth
+        if(depth == 0) {
+            System.out.println("Hit max search depth");
+            return evaluate(state);
+        }
+
         List<Move> moves = state.getMoves();
 
-        int evaluation = 0;
-
-        for (Move move : moves) {
+        for (Move move : moves) { // Go through all children
+            // Clone parent note
             DraughtsNode newNode = new DraughtsNode(state.clone());
             DraughtsState newState = newNode.getState();
 
-            newState.doMove(move);
+            newState.doMove(move); // Simulate move forward
+
+            if (node.getState().isEndState()) { // Reached leaf node
+                System.out.println("Reached leaf node.");
+                int evaluation = evaluate(newNode.getState());
+
+                if(maxEval <= evaluation) {
+                    maxEval = evaluation;
+                    node.setBestMove(move);
+                }
+                return maxEval;
+            }
 
             // For each move, see if the current maxEval (+inf) is smaller than the max aBMax of it's child
             maxEval = Math.max(maxEval, alphaBetaMin(newNode, alpha, beta, depth - 1)); // Decrement depth
             alpha = Math.max(alpha, maxEval);
+            System.out.println(depth + "current depth");
+
+            newState.undoMove(move);
 
             if (beta <= alpha) { // Prune
                 break;
             }
         }
+
         return maxEval;
     }
 
@@ -198,6 +216,39 @@ public class AlphaAndOmega  extends DraughtsPlayer {
     // ToDo: write an appropriate evaluation function
     int evaluate(DraughtsState state) {
         //state.getPieces()
-        return 0;
+        return whiteMinusBlack(state);
+    }
+
+    int whiteMinusBlack(DraughtsState state) {
+        int total = 0;
+        System.out.println("STARTING WHITE MINUS BLACK");
+
+        for (int i = 1; i < state.getPieces().length; i++) {
+            if(state.getPiece(i) == state.WHITEPIECE) {
+                total++;
+            } else if (state.getPiece(i) == state.BLACKPIECE) {
+                total--;
+            } else if (state.getPiece(i) == state.WHITEKING) {
+                total += 5;
+            } else if (state.getPiece(i) == state.BLACKKING) {
+                total -= 5;
+            }
+        }
+
+        // TODO: DO NOT CHECK piece[0]
+        // TODO: check heuristic for simulated moves
+        //for (int piece : state.getPieces()) {
+            //if(piece == state.WHITEPIECE) {
+                //total++;
+            //} else if (piece == state.BLACKPIECE) {
+                //total--;
+            //} else if (piece == state.WHITEKING) {
+                //total += 3;
+            //} else if (piece == state.BLACKKING) {
+                //total -= 3;
+            //}
+        //}
+        System.out.println(total + "TOTAL");
+        return total;
     }
 }

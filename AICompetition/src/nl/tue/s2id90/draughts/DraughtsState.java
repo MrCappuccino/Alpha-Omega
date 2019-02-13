@@ -148,7 +148,7 @@ public class DraughtsState implements GameState<Move> {
      * @see DraughtsState#EMPTY
      **/
     public int getPiece(int f) {
-        if (f<1 || f > 50) throw new IllegalArgumentException();
+        if (f < 1 || f > 50) throw new IllegalArgumentException();
         return bs.getPiece(f);
     }
 
