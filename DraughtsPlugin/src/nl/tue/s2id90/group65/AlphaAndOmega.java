@@ -122,6 +122,8 @@ public class AlphaAndOmega  extends DraughtsPlayer {
 
         DraughtsNode newNode = new DraughtsNode(node.getState().clone());
         DraughtsState newState = newNode.getState();
+        // TODO: If there is a forced move, move to it
+        // TODO: Reuse Minimax tree https://codereview.stackexchange.com/questions/190937/reusable-ai-game-tree
 
         // TODO: Checking leaf node can be expensive, get around that
         if(depth <= 0 || newState.isEndState()) {
@@ -164,7 +166,6 @@ public class AlphaAndOmega  extends DraughtsPlayer {
 
         // TODO: Checking leaf node can be expensive, get around that
         if(depth <= 0 || newState.isEndState()) {
-            System.out.println("Hit leaf or endState");
             return evaluate(newState);
         }
 
@@ -200,8 +201,18 @@ public class AlphaAndOmega  extends DraughtsPlayer {
     }
 
     int whiteMinusBlack(DraughtsState state) {
+        /*Possible heuristics:
+            piece count
+            kings count
+            trapped kings
+            turn
+            runaway checkers (free path to king)
+            larger values on the sides of the board (smaller going in)
+            kings on diagonals
+            */
+
         int total = 0;
-        // TODO: Add condition for winning/losign
+        // TODO: Add condition for winning/losing
         //if (state.isEndState()) {
             //return total = 500000;
         //}
