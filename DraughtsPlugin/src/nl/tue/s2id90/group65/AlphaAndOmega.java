@@ -10,13 +10,11 @@ import org10x10.dam.game.Move;
 
 /**
  * Implementation of the DraughtsPlayer interface.
- * @author huub
+ * @author Matas Peciukonis
  */
-// ToDo: rename this class (and hence this file) to have a distinct name
-//       for your player during the tournament
-public class AlphaAndOmega  extends DraughtsPlayer{
+public class AlphaAndOmega  extends DraughtsPlayer {
 
-    private int bestValue=0;
+    private int bestValue = 0;
     int maxSearchDepth;
 
     /** boolean that indicates that the GUI asked the player to stop thinking. */
@@ -26,6 +24,7 @@ public class AlphaAndOmega  extends DraughtsPlayer{
         super("best.png"); // ToDo: replace with your own icon
         this.maxSearchDepth = maxSearchDepth;
     }
+
     @Override
     public Move getMove(DraughtsState s) {
         Move bestMove = null;
@@ -46,7 +45,7 @@ public class AlphaAndOmega  extends DraughtsPlayer{
                     );
         } catch (AIStoppedException ex) {  /* nothing to do */  }
 
-        if (bestMove==null) {
+        if (bestMove == null) {
             System.err.println("no valid move found!");
             return getRandomValidMove(s);
         } else {
@@ -98,7 +97,7 @@ public class AlphaAndOmega  extends DraughtsPlayer{
 
     /** Does an alphabeta computation with the given alpha and beta
      * where the player that is to move in node is the minimizing player.
-     * 
+     *
      * <p>Typical pieces of code used in this method are:
      *     <ul> <li><code>DraughtsState state = node.getState()</code>.</li>
      *          <li><code> state.doMove(move); .... ; state.undoMove(move);</code></li>
@@ -115,32 +114,121 @@ public class AlphaAndOmega  extends DraughtsPlayer{
      */
     int alphaBetaMin(DraughtsNode node, int alpha, int beta, int depth) throws AIStoppedException {
         if (stopped) {
-            stopped = false; throw new AIStoppedException();
+            stopped = false;
+            throw new AIStoppedException();
         }
 
-        DraughtsState state = node.getState();
-        // ToDo: write an alphabeta search to compute bestMove and value
-        Move bestMove = state.getMoves().get(0);
-        int value = 0;
+        int score = beta;
+
+        DraughtsNode newNode = new DraughtsNode(node.getState().clone());
+        DraughtsState newState = newNode.getState();
+        // TODO: If there is a forced move, move to it
+        // TODO: Reuse Minimax tree https://codereview.stackexchange.com/questions/190937/reusable-ai-game-tree
+
+        // TODO: Checking leaf node can be expensive, get around that
+        if(depth <= 0 || newState.isEndState()) {
+            return evaluate(newState);
+        }
+
+        List<Move> moves = newState.getMoves();
+
+        Move bestMove = newState.getMoves().get(0);
+
+        for (Move move : moves) {
+            newState.doMove(move);
+
+            score = alphaBetaMax(newNode, alpha, beta, depth - 1);
+            newState.undoMove(move);
+
+            if (score < beta) {
+                beta = score;
+                bestMove = move;
+            }
+
+            if (beta <= alpha) { // Prune
+                break;
+            }
+        }
         node.setBestMove(bestMove);
-        return value;
+        return beta;
     }
 
     int alphaBetaMax(DraughtsNode node, int alpha, int beta, int depth) throws AIStoppedException {
         if (stopped) {
-            stopped = false; throw new AIStoppedException();
+            stopped = false;
+            throw new AIStoppedException();
         }
-        DraughtsState state = node.getState();
-        // ToDo: write an alphabeta search to compute bestMove and value
-        Move bestMove = state.getMoves().get(0);
-        int value = 0;
+
+        int score = alpha;
+
+        DraughtsNode newNode = new DraughtsNode(node.getState().clone());
+        DraughtsState newState = newNode.getState();
+
+        // TODO: Checking leaf node can be expensive, get around that
+        if(depth <= 0 || newState.isEndState()) {
+            return evaluate(newState);
+        }
+
+        List<Move> moves = newState.getMoves();
+
+        Move bestMove = newState.getMoves().get(0);
+
+        for (Move move : moves) { // Go through all children
+            newState.doMove(move); // Simulate move forward
+
+            score = alphaBetaMin(newNode, alpha, beta, depth - 1);
+            newState.undoMove(move);
+
+            if (score > alpha) {
+                alpha = score;
+                bestMove = move;
+            }
+
+            if (beta <= alpha) { // Prune
+                break;
+            }
+        }
         node.setBestMove(bestMove);
-        return value;
+        return alpha;
     }
 
+    // TODO: Write heuristic
     /** A method that evaluates the given state. */
     // ToDo: write an appropriate evaluation function
     int evaluate(DraughtsState state) {
-        return 0;
+        //state.getPieces()
+        return whiteMinusBlack(state);
+    }
+
+    int whiteMinusBlack(DraughtsState state) {
+        /*Possible heuristics:
+            piece count
+            kings count
+            trapped kings
+            turn
+            runaway checkers (free path to king)
+            larger values on the sides of the board (smaller going in)
+            kings on diagonals
+            */
+
+        int total = 0;
+        // TODO: Add condition for winning/losing
+        //if (state.isEndState()) {
+            //return total = 500000;
+        //}
+
+        for (int i = 1; i < 51; i++) { // 51 - all placements on board
+            if(state.getPiece(i) == state.WHITEPIECE) {
+                total++;
+            } else if (state.getPiece(i) == state.BLACKPIECE) {
+                total--;
+            } else if (state.getPiece(i) == state.WHITEKING) {
+                total += 5;
+            } else if (state.getPiece(i) == state.BLACKKING) {
+                total -= 5;
+            }
+        }
+
+        return total;
     }
 }
