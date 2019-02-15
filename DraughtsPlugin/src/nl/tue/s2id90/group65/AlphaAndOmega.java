@@ -19,6 +19,7 @@ public class AlphaAndOmega  extends DraughtsPlayer {
 
     /** boolean that indicates that the GUI asked the player to stop thinking. */
     private boolean stopped;
+    private boolean isWhite = false;
 
     public AlphaAndOmega(int maxSearchDepth) {
         super("best.png"); // ToDo: replace with your own icon
@@ -31,6 +32,7 @@ public class AlphaAndOmega  extends DraughtsPlayer {
         bestValue = 0;
         DraughtsNode node = new DraughtsNode(s);    // the root of the search tree
         try {
+            isWhite = s.isWhiteToMove();
             // compute bestMove and bestValue in a call to alphabeta
             bestValue = alphaBeta(node, MIN_VALUE, MAX_VALUE, maxSearchDepth);
 
@@ -54,7 +56,7 @@ public class AlphaAndOmega  extends DraughtsPlayer {
     }
 
     /** This method's return value is displayed in the AICompetition GUI.
-     * 
+     *
      * @return the value for the draughts state s as it is computed in a call to getMove(s). 
      */
     @Override
@@ -202,30 +204,31 @@ public class AlphaAndOmega  extends DraughtsPlayer {
 
     int whiteMinusBlack(DraughtsState state) {
         /*Possible heuristics:
-            piece count
-            kings count
-            trapped kings
-            turn
-            runaway checkers (free path to king)
-            larger values on the sides of the board (smaller going in)
-            kings on diagonals
-            */
+          piece count
+          kings count
+          trapped kings
+          turn
+          runaway checkers (free path to king)
+          larger values on the sides of the board (smaller going in)
+          kings on diagonals
+          */
 
         int total = 0;
         // TODO: Add condition for winning/losing
-        //if (state.isEndState()) {
-            //return total = 500000;
-        //}
+        if (state.isEndState() && isWhite) {
+            System.out.println("Winning move found.");
+            return total = 100000;
+        }
 
         for (int i = 1; i < 51; i++) { // 51 - all placements on board
             if(state.getPiece(i) == state.WHITEPIECE) {
-                total++;
+                total += 100;
             } else if (state.getPiece(i) == state.BLACKPIECE) {
-                total--;
+                total -= 100;
             } else if (state.getPiece(i) == state.WHITEKING) {
-                total += 5;
+                total += 300;
             } else if (state.getPiece(i) == state.BLACKKING) {
-                total -= 5;
+                total -= 300;
             }
         }
 
