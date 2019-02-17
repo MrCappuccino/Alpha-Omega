@@ -20,7 +20,7 @@ public class AlphaAndOmegaPlugin extends DraughtsPlayerProvider implements Draug
         // During the final competition you should make only your 
         // best player available. For testing it might be handy
         // to make more than one player available.
-        super(new AlphaAndOmega(12),
+        super(new AlphaAndOmega(11),
                 new UninformedPlayer(),
                 new OptimisticPlayer(),
                 new BuggyPlayer()

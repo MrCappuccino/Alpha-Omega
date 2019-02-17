@@ -32,7 +32,6 @@ public class AlphaAndOmega  extends DraughtsPlayer {
         bestValue = 0;
         DraughtsNode node = new DraughtsNode(s);    // the root of the search tree
         try {
-            isWhite = s.isWhiteToMove();
             // compute bestMove and bestValue in a call to alphabeta
             bestValue = alphaBeta(node, MIN_VALUE, MAX_VALUE, maxSearchDepth);
 
@@ -91,8 +90,10 @@ public class AlphaAndOmega  extends DraughtsPlayer {
     int alphaBeta(DraughtsNode node, int alpha, int beta, int depth) throws AIStoppedException
     {
         if (node.getState().isWhiteToMove()) {
+            isWhite = true;
             return alphaBetaMax(node, alpha, beta, depth);
         } else  {
+            isWhite = false;
             return alphaBetaMin(node, alpha, beta, depth);
         }
     }
@@ -215,9 +216,12 @@ public class AlphaAndOmega  extends DraughtsPlayer {
 
         int total = 0;
         // TODO: Add condition for winning/losing
-        if (state.isEndState() && isWhite) {
-            System.out.println("Winning move found.");
-            return total = 100000;
+        if (state.isEndState() && state.isWhiteToMove()) {
+            System.out.println("White winning move found");
+            return total += 10000;
+        } else if (state.isEndState() && !state.isWhiteToMove()) {
+            System.out.println("White winning move found");
+            return total -= 10000;
         }
 
         for (int i = 1; i < 51; i++) { // 51 - all placements on board
