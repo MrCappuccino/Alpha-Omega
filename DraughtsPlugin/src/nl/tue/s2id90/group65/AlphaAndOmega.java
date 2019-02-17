@@ -19,7 +19,6 @@ public class AlphaAndOmega  extends DraughtsPlayer {
 
     /** boolean that indicates that the GUI asked the player to stop thinking. */
     private boolean stopped;
-    private boolean isWhite = false;
 
     public AlphaAndOmega(int maxSearchDepth) {
         super("best.png"); // ToDo: replace with your own icon
@@ -31,6 +30,7 @@ public class AlphaAndOmega  extends DraughtsPlayer {
         Move bestMove = null;
         bestValue = 0;
         DraughtsNode node = new DraughtsNode(s);    // the root of the search tree
+
         try {
             // compute bestMove and bestValue in a call to alphabeta
             bestValue = alphaBeta(node, MIN_VALUE, MAX_VALUE, maxSearchDepth);
@@ -90,10 +90,8 @@ public class AlphaAndOmega  extends DraughtsPlayer {
     int alphaBeta(DraughtsNode node, int alpha, int beta, int depth) throws AIStoppedException
     {
         if (node.getState().isWhiteToMove()) {
-            isWhite = true;
             return alphaBetaMax(node, alpha, beta, depth);
         } else  {
-            isWhite = false;
             return alphaBetaMin(node, alpha, beta, depth);
         }
     }
@@ -195,11 +193,8 @@ public class AlphaAndOmega  extends DraughtsPlayer {
         return alpha;
     }
 
-    // TODO: Write heuristic
     /** A method that evaluates the given state. */
-    // ToDo: write an appropriate evaluation function
     int evaluate(DraughtsState state) {
-        //state.getPieces()
         return whiteMinusBlack(state);
     }
 
@@ -215,15 +210,16 @@ public class AlphaAndOmega  extends DraughtsPlayer {
           */
 
         int total = 0;
-        // TODO: Add condition for winning/losing
-        if (state.isEndState() && state.isWhiteToMove()) {
-            System.out.println("White winning move found");
-            return total += 10000;
-        } else if (state.isEndState() && !state.isWhiteToMove()) {
-            System.out.println("White winning move found");
-            return total -= 10000;
-        }
+        state.
 
+            if (state.isEndState()) { // Leaf
+                if (state.isWhiteToMove()) {
+                    total -= 10000;
+                } else if (!state.isWhiteToMove()) {
+                    total += 10000;
+                }
+            }
+        // TODO: Add condition for winning/losing
         for (int i = 1; i < 51; i++) { // 51 - all placements on board
             if(state.getPiece(i) == state.WHITEPIECE) {
                 total += 100;
