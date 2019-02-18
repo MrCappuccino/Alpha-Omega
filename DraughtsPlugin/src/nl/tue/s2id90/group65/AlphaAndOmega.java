@@ -34,14 +34,14 @@ public class AlphaAndOmega  extends DraughtsPlayer {
 
             // print the results for debugging reasons
             System.err.format(
-                    "%s: best move = %5s, value=%d\n", 
+                    "%s: Alpha & Omega best move = %5s, value=%d\n", 
                     this.getClass().getSimpleName(), bestMove, bestValue
                     );
         } catch (AIStoppedException ex) {  /* nothing to do */  }
-		
-		bestMove = node.getBestMove();		// store best recent move
-		System.out.println("bestFinalMove: " + bestMove);
-		
+
+        bestMove = node.getBestMove();		// store best recent move
+        System.out.println(this.toString() + bestMove);
+
         if (bestMove == null) {
             System.err.println("no valid move found!");
             return getRandomValidMove(s);
@@ -85,14 +85,14 @@ public class AlphaAndOmega  extends DraughtsPlayer {
      **/
     void alphaBeta(DraughtsNode node, int alpha, int beta) throws AIStoppedException
     {
-		for  (int depth = 1;; depth++) {
-			if (node.getState().isWhiteToMove()) {
-				bestValue = alphaBetaMax(node, alpha, beta, depth);
-			} else  {
-				bestValue = alphaBetaMin(node, alpha, beta, depth);
-			}
-			System.out.println("bestMove: " + node.getBestMove() + " at depth: " + depth);
-		}
+        for  (int depth = 1;; depth++) {
+            if (node.getState().isWhiteToMove()) {
+                bestValue = alphaBetaMax(node, alpha, beta, depth);
+            } else  {
+                bestValue = alphaBetaMin(node, alpha, beta, depth);
+            }
+            System.out.println("Alpha & Omega: " + node.getBestMove() + " at depth: " + depth);
+        }
     }
 
     /** Does an alphabeta computation with the given alpha and beta
@@ -210,13 +210,13 @@ public class AlphaAndOmega  extends DraughtsPlayer {
 
         int total = 0;
 
-            if (state.isEndState()) { // Leaf
-                if (state.isWhiteToMove()) {
-                    total -= 10000;
-                } else if (!state.isWhiteToMove()) {
-                    total += 10000;
-                }
+        if (state.isEndState()) { // Leaf
+            if (state.isWhiteToMove()) {
+                total -= 10000;
+            } else if (!state.isWhiteToMove()) {
+                total += 10000;
             }
+        }
         // TODO: Add condition for winning/losing
         for (int i = 1; i < 51; i++) { // 51 - all placements on board
             if(state.getPiece(i) == state.WHITEPIECE) {
