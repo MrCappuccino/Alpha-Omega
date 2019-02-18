@@ -34,18 +34,18 @@ public class AlphaAndOmega  extends DraughtsPlayer {
 
             // print the results for debugging reasons
             System.err.format(
-                    "%s: Alpha & Omega best move = %5s, value=%d\n", 
+                    "%s: best move = %5s, value=%d\n", 
                     this.getClass().getSimpleName(), bestMove, bestValue
                     );
-        } catch (AIStoppedException ex) {  /* nothing to do */  }
-
-        bestMove = node.getBestMove();		// store best recent move
-        System.out.println(this.toString() + bestMove);
+        } catch (AIStoppedException ex) {
+            bestMove = node.getBestMove(); // store best recent move
+        }
 
         if (bestMove == null) {
             System.err.println("no valid move found!");
             return getRandomValidMove(s);
         } else {
+            System.out.println("Move taken: " + bestMove);
             return bestMove;
         }
     }
@@ -91,7 +91,7 @@ public class AlphaAndOmega  extends DraughtsPlayer {
             } else  {
                 bestValue = alphaBetaMin(node, alpha, beta, depth);
             }
-            System.out.println("Alpha & Omega: " + node.getBestMove() + " at depth: " + depth);
+            System.out.println("AlphaAndOmega: depth = " + depth + ", best move = " + node.getBestMove() + ", Score: " + getValue());
         }
     }
 
@@ -132,7 +132,7 @@ public class AlphaAndOmega  extends DraughtsPlayer {
 
         List<Move> moves = newState.getMoves();
 
-        Move bestMove = newState.getMoves().get(0);
+        Move bestMove = moves.get(0);
 
         for (Move move : moves) {
             newState.doMove(move);
@@ -171,7 +171,7 @@ public class AlphaAndOmega  extends DraughtsPlayer {
 
         List<Move> moves = newState.getMoves();
 
-        Move bestMove = newState.getMoves().get(0);
+        Move bestMove = moves.get(0);
 
         for (Move move : moves) { // Go through all children
             newState.doMove(move); // Simulate move forward
