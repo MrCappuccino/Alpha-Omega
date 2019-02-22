@@ -1,22 +1,23 @@
 # MiniMax Alpha-Beta Pruning for International Draughts
 
+# How to run project
+First cd into the project directory, then:
 ## Build
 1. Build DraughtsPlugin
 ```
-ant -f /home/ongo/Documents/uni/2ID90/assignment1/DraughtsPlugin -Dnb.internal.action.name=rebuild clean jar
+ant -f DraughtsPlugin -Dnb.internal.action.name=build jar
 ```
 2. Build AICompetition
 ```
-ant -f /home/ongo/Documents/uni/2ID90/assignment1/AICompetition -Dnb.internal.action.name=rebuild clean jar
+ant -f AICompetition -Dnb.internal.action.name=build jar
 ```
 
 ## Run
 ```
-ant -f /home/ongo/Documents/uni/2ID90/assignment1/AICompetition -Dnb.internal.action.name=run run
+ant -f AICompetition -Dnb.internal.action.name=run run
 ```
 
-### All at once
+# All at once
 ```
-ant -f /home/ongo/Documents/uni/2ID90/assignment1/DraughtsPlugin -Dnb.internal.action.name=rebuild clean jar && ant -f /home/ongo/Documents/uni/2ID90/assignment1/AICompetition -Dnb.internal.action.name=rebuild clean jar && ant -f /home/ongo/Documents/uni/2ID90/assignment1/AICompetition -Dnb.internal.action.name=run run
+ant -f DraughtsPlugin -Dnb.internal.action.name=build jar && ant -f AICompetition -Dnb.internal.action.name=build jar && ant -f AICompetition -Dnb.internal.action.name=run run
 ```
-
