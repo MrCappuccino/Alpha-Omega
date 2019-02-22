@@ -119,9 +119,20 @@ public class AlphaAndOmega  extends DraughtsPlayer{
             throw new AIStoppedException();
         }
 
+<<<<<<< Updated upstream
         int value = 0;
         if(depth == maxSearchDepth) {
             return value;
+=======
+        int score = beta;
+
+        DraughtsNode newNode = new DraughtsNode(node.getState().clone());
+        DraughtsState newState = newNode.getState();
+
+        // TODO: Reuse Minimax tree https://codereview.stackexchange.com/questions/190937/reusable-ai-game-tree
+        if(depth <= 0 || newState.isEndState()) {
+            return evaluate(newState);
+>>>>>>> Stashed changes
         }
 
         DraughtsState state = node.getState();
@@ -147,6 +158,63 @@ public class AlphaAndOmega  extends DraughtsPlayer{
     /** A method that evaluates the given state. */
     // ToDo: write an appropriate evaluation function
     int evaluate(DraughtsState state) {
+<<<<<<< Updated upstream
         return 0;
+=======
+        return whiteMinusBlack(state);
+    }
+
+    int whiteMinusBlack(DraughtsState state) {
+        /*Possible heuristics:
+          piece count
+          kings count
+          trapped kings
+          turn
+          runaway checkers (free path to king)
+          larger values on the sides of the board (smaller going in)
+          kings on diagonals
+          */
+
+        int total = 0;
+
+        if (state.isEndState()) { // Leaf
+            if (state.isWhiteToMove()) {
+                total -= 10000;
+            } else if (!state.isWhiteToMove()) {
+                total += 10000;
+            }
+        }
+
+        int[] boardValues = new int[] {
+        99, 2,  2,  2,  2,  2, 
+            1,  1,  1,  1,  1, 
+            1,  1,  1,  1,  1, 
+            3,  4,  4,  4,  3, 
+            3,  4,  5,  4,  3, 
+            3,  4,  5,  4,  3, 
+            3,  4,  4,  4,  3, 
+            1,  1,  1,  1,  1, 
+            1,  1,  1,  1,  1, 
+            2,  2,  2,  2,  2 
+        };
+
+        for (int i = 1; i < 51; i++) { // 51 - all placements on board
+            if(state.getPiece(i) == state.WHITEPIECE) {
+                total += 100;
+                total += boardValues[i] * 10;
+            } else if (state.getPiece(i) == state.BLACKPIECE) {
+                total -= 100;
+                total -= boardValues[i] * 10;
+            } else if (state.getPiece(i) == state.WHITEKING) {
+                total += 300;
+                total += boardValues[i] * 10;
+            } else if (state.getPiece(i) == state.BLACKKING) {
+                total -= 300;
+                total -= boardValues[i] * 10;
+            }
+        }
+
+        return total;
+>>>>>>> Stashed changes
     }
 }

@@ -1,0 +1,12 @@
+* Center pieces are stronger
+
+Formations:
+    * e.g. 3 neighbor pieces on the same diagonal
+    * Balance the pieces in an even distribution on the board
+    * Diagonal columns
+    * Outposts can be dangerous (solo pieces) in the 6th row // TOO HARD
+    * Tempi - who's more advanced? (manhattan distance to king of all pieces) // Kings > tempi
+    * King defence (break through)
+    * Killer draughts
+    * Baseline pieces are important
+    * Middle of the board more weight (not much)
