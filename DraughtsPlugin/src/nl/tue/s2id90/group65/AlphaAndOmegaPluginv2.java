@@ -14,16 +14,12 @@ import nl.tue.s2id90.draughts.DraughtsPlugin;
  * @author huub
  */
 @PluginImplementation
-public class AlphaAndOmegaPlugin extends DraughtsPlayerProvider implements DraughtsPlugin {
-    public AlphaAndOmegaPlugin() {
+public class AlphaAndOmegaPluginv2 extends DraughtsPlayerProvider implements DraughtsPlugin {
+    public AlphaAndOmegaPluginv2() {
         // make one or more players available to the AICompetition tool
         // During the final competition you should make only your 
         // best player available. For testing it might be handy
         // to make more than one player available.
-        super(new AlphaAndOmega(),
-                new UninformedPlayer(),
-                new OptimisticPlayer(),
-                new BuggyPlayer()
-        );
+        super(new AlphaAndOmegav2());
     }
 }

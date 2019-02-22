@@ -12,14 +12,14 @@ import org10x10.dam.game.Move;
  * Implementation of the DraughtsPlayer interface.
  * @author Matas Peciukonis
  */
-public class AlphaAndOmega  extends DraughtsPlayer {
+public class AlphaAndOmegav2  extends DraughtsPlayer {
 
     private int bestValue = 0;
 
     /** boolean that indicates that the GUI asked the player to stop thinking. */
     private boolean stopped;
 
-    public AlphaAndOmega() {
+    public AlphaAndOmegav2() {
         super("best.png"); // ToDo: replace with your own icon
     }
 
@@ -91,7 +91,7 @@ public class AlphaAndOmega  extends DraughtsPlayer {
             } else  {
                 bestValue = alphaBetaMin(node, alpha, beta, depth);
             }
-            System.out.println("AlphaAndOmega: depth = " + depth + ", best move = " + node.getBestMove() + ", Score: " + getValue());
+            System.out.println(this.getClass().getSimpleName() + ": depth = " + depth + ", best move = " + node.getBestMove() + ", Score: " + getValue());
         }
     }
 
@@ -217,18 +217,36 @@ public class AlphaAndOmega  extends DraughtsPlayer {
                 total += 10000;
             }
         }
-        // TODO: Add condition for winning/losing
+
+        int[] boardValues = new int[] {
+          999,  2,  2,  2,  2,  2, 
+                1,  1,  1,  1,  1, 
+                1,  1,  1,  1,  1, 
+                2,  3,  3,  3,  2, 
+                2,  3,  4,  3,  2, 
+                2,  3,  4,  3,  2, 
+                2,  3,  3,  3,  2, 
+                1,  1,  1,  1,  1, 
+                1,  1,  1,  1,  1, 
+                2,  2,  2,  2,  2 
+        };
+
         for (int i = 1; i < 51; i++) { // 51 - all placements on board
             if(state.getPiece(i) == state.WHITEPIECE) {
                 total += 100;
+                total += boardValues[i] * 10;
             } else if (state.getPiece(i) == state.BLACKPIECE) {
                 total -= 100;
+                total -= boardValues[i] * 10;
             } else if (state.getPiece(i) == state.WHITEKING) {
                 total += 300;
+                total += boardValues[i] * 10;
             } else if (state.getPiece(i) == state.BLACKKING) {
                 total -= 300;
+                total -= boardValues[i] * 10;
             }
         }
+
 
         return total;
     }
