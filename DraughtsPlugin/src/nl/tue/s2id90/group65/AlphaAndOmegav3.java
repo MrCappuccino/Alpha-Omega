@@ -136,10 +136,8 @@ public class AlphaAndOmegav3  extends DraughtsPlayer {
 		
 		for (Move move : moves) {
 			int value;
-//			System.out.print(evaluate(newState));
 			newState.doMove(move);
 			value = evaluate(newState);
-//			System.out.println(" " + evaluate(newState));
 			newState.undoMove(move);
 			pairs.add(new Pair(move, value));
 		}
@@ -151,7 +149,7 @@ public class AlphaAndOmegav3  extends DraughtsPlayer {
 		}
 		System.out.println();
 		
-		Heap.heapSort(pairs, Heap.MINHEAP);
+		Heap.sort(pairs);
 		
 		System.out.print("after: ");
 		for (int i = 0; i < pairs.size(); i++)
@@ -160,9 +158,9 @@ public class AlphaAndOmegav3  extends DraughtsPlayer {
 		}
 		System.out.println();
 		
-        Move bestMove = pairs.get(pairs.size() - 1).getMove();
+        Move bestMove = pairs.get(0).getMove();
 	
-        for (int i = pairs.size() - 1; i >= 0; i--) { // Go through all children
+        for (int i = 0; i < pairs.size(); i++) { // Go through all children
 			Move move = pairs.get(i).getMove();
 		
             newState.doMove(move);
@@ -210,7 +208,7 @@ public class AlphaAndOmegav3  extends DraughtsPlayer {
 			pairs.add(new Pair(move, value));
 		}
 		
-		Heap.heapSort(pairs, Heap.MAXHEAP);
+		Heap.sort(pairs);
 
         Move bestMove = pairs.get(pairs.size() - 1).getMove();
 
