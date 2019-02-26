@@ -2,6 +2,7 @@ package nl.tue.s2id90.group65;
 
 import static java.lang.Integer.MAX_VALUE;
 import static java.lang.Integer.MIN_VALUE;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import nl.tue.s2id90.draughts.DraughtsState;
@@ -12,14 +13,14 @@ import org10x10.dam.game.Move;
  * Implementation of the DraughtsPlayer interface.
  * @author Matas Peciukonis
  */
-public class AlphaAndOmega  extends DraughtsPlayer {
+public class AlphaAndOmegav3  extends DraughtsPlayer {
 
     private int bestValue = 0;
 
     /** boolean that indicates that the GUI asked the player to stop thinking. */
     private boolean stopped;
 
-    public AlphaAndOmega() {
+    public AlphaAndOmegav3() {
         super("best.png"); // ToDo: replace with your own icon
     }
 
@@ -34,18 +35,18 @@ public class AlphaAndOmega  extends DraughtsPlayer {
 
             // print the results for debugging reasons
             System.err.format(
-                    "%s: Alpha & Omega best move = %5s, value=%d\n", 
+                    "%s: best move = %5s, value=%d\n", 
                     this.getClass().getSimpleName(), bestMove, bestValue
                     );
-        } catch (AIStoppedException ex) {  /* nothing to do */  }
-
-        bestMove = node.getBestMove();		// store best recent move
-        System.out.println(this.toString() + bestMove);
+        } catch (AIStoppedException ex) {
+            bestMove = node.getBestMove(); // store best recent move
+        }
 
         if (bestMove == null) {
             System.err.println("no valid move found!");
             return getRandomValidMove(s);
         } else {
+            System.out.println("Move taken: " + bestMove);
             return bestMove;
         }
     }
@@ -91,7 +92,7 @@ public class AlphaAndOmega  extends DraughtsPlayer {
             } else  {
                 bestValue = alphaBetaMin(node, alpha, beta, depth);
             }
-            System.out.println("Alpha & Omega: " + node.getBestMove() + " at depth: " + depth);
+            System.out.println(this.getClass().getSimpleName() + ": depth = " + depth + ", best move = " + node.getBestMove() + ", Score: " + getValue());
         }
     }
 
@@ -131,10 +132,39 @@ public class AlphaAndOmega  extends DraughtsPlayer {
         }
 
         List<Move> moves = newState.getMoves();
-
-        Move bestMove = newState.getMoves().get(0);
-
-        for (Move move : moves) {
+		List<Pair> pairs = new ArrayList<>();
+		
+		for (Move move : moves) {
+			int value;
+//			System.out.print(evaluate(newState));
+			newState.doMove(move);
+			value = evaluate(newState);
+//			System.out.println(" " + evaluate(newState));
+			newState.undoMove(move);
+			pairs.add(new Pair(move, value));
+		}
+		
+		System.out.print("before: ");
+		for (int i = 0; i < pairs.size(); i++)
+		{
+			System.out.print(pairs.get(i).getVal() + " ");
+		}
+		System.out.println();
+		
+		Heap.heapSort(pairs, Heap.MINHEAP);
+		
+		System.out.print("after: ");
+		for (int i = 0; i < pairs.size(); i++)
+		{
+			System.out.print(pairs.get(i).getVal() + " ");
+		}
+		System.out.println();
+		
+        Move bestMove = pairs.get(pairs.size() - 1).getMove();
+	
+        for (int i = pairs.size() - 1; i >= 0; i--) { // Go through all children
+			Move move = pairs.get(i).getMove();
+		
             newState.doMove(move);
 
             score = alphaBetaMax(newNode, alpha, beta, depth - 1);
@@ -170,10 +200,22 @@ public class AlphaAndOmega  extends DraughtsPlayer {
         }
 
         List<Move> moves = newState.getMoves();
+		List<Pair> pairs = new ArrayList<>();
+		
+		for (Move move : moves) {
+			int value;
+			newState.doMove(move);
+			value = evaluate(newState);
+			newState.undoMove(move);
+			pairs.add(new Pair(move, value));
+		}
+		
+		Heap.heapSort(pairs, Heap.MAXHEAP);
 
-        Move bestMove = newState.getMoves().get(0);
+        Move bestMove = pairs.get(pairs.size() - 1).getMove();
 
-        for (Move move : moves) { // Go through all children
+        for (int i = pairs.size() - 1; i >= 0; i--) { // Go through all children
+			Move move = pairs.get(i).getMove();
             newState.doMove(move); // Simulate move forward
 
             score = alphaBetaMin(newNode, alpha, beta, depth - 1);
@@ -193,7 +235,7 @@ public class AlphaAndOmega  extends DraughtsPlayer {
     }
 
     /** A method that evaluates the given state. */
-    int evaluate(DraughtsState state) {
+    public int evaluate(DraughtsState state) {
         return whiteMinusBlack(state);
     }
 
@@ -217,18 +259,36 @@ public class AlphaAndOmega  extends DraughtsPlayer {
                 total += 10000;
             }
         }
-        // TODO: Add condition for winning/losing
+
+        int[] boardValues = new int[] {
+          999,  2,  2,  2,  2,  2, 
+                1,  1,  1,  1,  1, 
+                1,  1,  1,  1,  1, 
+                2,  3,  3,  3,  2, 
+                2,  3,  4,  3,  2, 
+                2,  3,  4,  3,  2, 
+                2,  3,  3,  3,  2, 
+                1,  1,  1,  1,  1, 
+                1,  1,  1,  1,  1, 
+                2,  2,  2,  2,  2 
+        };
+
         for (int i = 1; i < 51; i++) { // 51 - all placements on board
             if(state.getPiece(i) == state.WHITEPIECE) {
                 total += 100;
+                total += boardValues[i] * 10;
             } else if (state.getPiece(i) == state.BLACKPIECE) {
                 total -= 100;
+                total -= boardValues[i] * 10;
             } else if (state.getPiece(i) == state.WHITEKING) {
                 total += 300;
+                total += boardValues[i] * 10;
             } else if (state.getPiece(i) == state.BLACKKING) {
                 total -= 300;
+                total -= boardValues[i] * 10;
             }
         }
+
 
         return total;
     }
