@@ -1,4 +1,11 @@
-# MiniMax Alpha-Beta Pruning for International Draughts
+# International Draughts Bot
+
+# Features
+* MiniMax
+* Alpha-Beta pruning
+* Iterative deepening
+* Board state heuristic
+* Material heuristic
 
 # How to run project
 First cd into the project directory, then:
